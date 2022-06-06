@@ -29,6 +29,8 @@ import com.efremovkirill.myapplication.Util
 import com.efremovkirill.myapplication.data.FactModel
 import kotlinx.coroutines.*
 
+private const val DELAY = 1000L
+
 @Composable
 fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel,
@@ -141,7 +143,11 @@ fun HomeScreen(
                 ) {
                     Icon(
                         modifier = Modifier.size(48.dp).clickable {
-                            Util.shareFact(context = context, factId = fact.value!!.id, factContent = fact.value!!.value)
+                            Util.shareFact(
+                                context = context,
+                                factId = fact.value!!.id,
+                                factContent = fact.value!!.value
+                            )
                         },
                         painter = painterResource(R.drawable.share),
                         tint = Color.White,
@@ -160,18 +166,15 @@ fun HomeScreen(
                 val clicked = remember { mutableStateOf(false) }
                 val scope = CoroutineScope(Dispatchers.IO + CoroutineName("Coroutine #1"))
                 if (clicked.value && !loading.value) {
-                    if (online.value)
-                        scope.launch {
+                    scope.launch {
+                        if (online.value)
                             refreshFact(
                                 homeScreenViewModel = homeScreenViewModel,
                                 factViewModel = factViewModel,
-                                scope = scope,
                                 state = clicked,
                                 loading = loading
                             )
-                        }
-                    else
-                        scope.launch {
+                        else {
                             var temp = factViewModel.getRandomFact()
 
                             if (temp != null)
@@ -186,7 +189,7 @@ fun HomeScreen(
                                     "https://r0b33dl1n7"
                                 )
 
-                                if(!factViewModel.factAvailable("r0b33dl1n7")) {
+                                if (!factViewModel.factAvailable("r0b33dl1n7")) {
                                     Log.d("Facts", "Fact r0b33dl1n7 not available, insert to db.")
                                     factViewModel.insertFact(temp)
                                 }
@@ -196,6 +199,7 @@ fun HomeScreen(
                             Log.d("Test", "Get fact ${fact.value}")
                             clicked.value = false
                         }
+                    }
                 }
                 ModButton(
                     text = "Give me a new fact",
@@ -213,22 +217,20 @@ fun HomeScreen(
 suspend fun refreshFact(
     homeScreenViewModel: HomeScreenViewModel,
     factViewModel: FactViewModel,
-    scope: CoroutineScope,
     state: MutableState<Boolean>,
     loading: MutableState<Boolean>
-) {
-    loading.value = true; delay(1000)
+) = coroutineScope {
+    loading.value = true; delay(DELAY)
     Log.d("Facts", "Refresh Fact")
 
-    val result = scope.async {
+    val result = async {
         homeScreenViewModel.getRandomFact()
     }
     result.await()?.let {
-        if(!factViewModel.factAvailable(it.id)) {
+        if (!factViewModel.factAvailable(it.id)) {
             Log.d("Facts", "Fact ${it.id} not available, insert to db.")
             factViewModel.insertFact(it)
-        }
-        else {
+        } else {
             Log.d("Facts", "Fact ${it.id} available.")
         }
     }
