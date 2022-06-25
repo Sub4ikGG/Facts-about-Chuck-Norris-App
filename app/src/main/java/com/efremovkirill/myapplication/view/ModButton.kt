@@ -34,7 +34,7 @@ fun ModButton(
     textColor: Color = Color.Black,
     textSize: TextUnit,
     clicked: MutableState<Boolean>? = null,
-    modifier: Modifier = Modifier.padding(bottom = 48.dp)
+    modifier: Modifier = Modifier.padding()
 ) {
     val selected = remember { mutableStateOf(false) }
     val pressScale = animateFloatAsState(if (selected.value) 0.9f else 1f)

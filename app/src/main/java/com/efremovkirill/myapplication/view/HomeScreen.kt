@@ -202,6 +202,7 @@ fun HomeScreen(
                     }
                 }
                 ModButton(
+                    modifier = Modifier.padding(bottom = 48.dp),
                     text = "Give me a new fact",
                     buttonColor = Color.Black,
                     shapeDp = 15.dp,

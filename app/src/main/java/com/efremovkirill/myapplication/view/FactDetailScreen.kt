@@ -120,6 +120,7 @@ fun FactDetailScreen(
                     clicked.value = false
                 }
                 ModButton(
+                    modifier = Modifier.padding(bottom = 48.dp),
                     text = "Back",
                     buttonColor = Color.Black,
                     shapeDp = 15.dp,
