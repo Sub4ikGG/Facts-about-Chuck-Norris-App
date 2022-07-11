@@ -1,4 +1,4 @@
-# ChuckNorris-Facts
+# Facts about Chuck Norris. App.
 Chuck Norris facts in your phone.
 
 API: https://api.chucknorris.io/
